@@ -242,8 +242,8 @@ public class LoginServiceImpl implements LoginService {
 
     private JSONObject packAuthCookieMsg(boolean error,String msg){
         JSONObject resultJSON = new JSONObject();
-        resultJSON.put("error", true);
-        resultJSON.put("msg", "Ticket is null or '' !");
+        resultJSON.put("error", error);
+        resultJSON.put("msg", msg);
         return resultJSON;
     }
 

@@ -9,6 +9,7 @@
         <property name="locations">
             <list>
                 <value>WEB-INF/dbcp.properties</value>
+                <!--<value>WEB-INF/log4j.properties</value>-->
             </list>
         </property>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
@@ -79,7 +80,7 @@
         </property>
         <property name="secretKey" value="111111112222222233333333"/>
         <property name="secure" value="false"/>
-        <property name="ticketTimeout" value="11"/>
+        <property name="ticketTimeout" value="120"/><!-- ticket 过期时间 单位：秒 -->
         <property name="tickets" ref="ticketMap"/>
         <property name="userDao" ref="userDao"/>
     </bean>
@@ -106,7 +107,7 @@
     <!-- ======================== 调度触发器 ======================== -->
     <bean id="CronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="SpringQtzJobMethod"></property>
-        <property name="cronExpression" value="0/10 * * * * ?"></property>
+        <property name="cronExpression" value="0/30 * * * * ?"></property>
     </bean>
 
     <!-- ======================== 调度工厂 ======================== -->

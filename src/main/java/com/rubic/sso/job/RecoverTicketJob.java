@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 回收ticket任务调度器
  * Created by Mian on 2016/5/19.
  */
 public class RecoverTicketJob {
@@ -20,20 +21,23 @@ public class RecoverTicketJob {
         this.tickets = tickets;
     }
 
+    /**
+     * 回收ticket实现
+     */
     public void recover(){
-        System.out.println("目前共有："+tickets.size()+" 条cookie，现在对过期ticket进行清理!");
-        logger.debug("开始对过期ticket进行清理!");
+//        System.out.println("目前共有："+tickets.size()+" ticket，现在对过期ticket进行清理!");
+        logger.info("目前共有："+tickets.size()+" ticket，现在对过期ticket进行清理!");
         List<String> ticketKeys = new ArrayList<String>();
         for(Map.Entry<String, Ticket> entry : tickets.entrySet()) {
             long recoverTime = entry.getValue().getRecoverTime().getTime();
             long currentTime = System.currentTimeMillis();
-            System.out.println("recoverTime: "+recoverTime+" - currentTime: "+currentTime);
+            logger.info("recoverTime: "+recoverTime+" - currentTime: "+currentTime);
             if(recoverTime < currentTime)
                 ticketKeys.add(entry.getKey());
         }
         for(String ticketKey : ticketKeys) {
             tickets.remove(ticketKey);
-            logger.debug("ticket[" + ticketKey + "]过期已删除！");
+            logger.info("ticket[" + ticketKey + "]过期已删除！");
         }
     }
 

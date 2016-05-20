@@ -22,7 +22,7 @@ public class SSOAuthController {
     @Autowired
     private LoginService loginService;
 
-    @RequestMapping(params = "action=prelogin")
+    @RequestMapping(params = "action=preLogin")
     public String handlePreLogin(@RequestParam("action") String action, HttpServletRequest request, HttpServletResponse response){
 
         String path = loginService.handlePreLogin(request,response);
