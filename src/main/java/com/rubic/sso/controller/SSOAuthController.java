@@ -1,6 +1,6 @@
 package com.rubic.sso.controller;
 
-import com.rubic.sso.service.LoginService;
+import com.rubic.sso.service.AuthService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,36 +20,36 @@ import javax.servlet.http.HttpServletResponse;
 public class SSOAuthController {
 
     @Autowired
-    private LoginService loginService;
+    private AuthService authService;
 
-    @RequestMapping(params = "action=preLogin")
+    @RequestMapping(params = "action=preLogin",produces = "application/json;charset=UTF-8")
     public String handlePreLogin(@RequestParam("action") String action, HttpServletRequest request, HttpServletResponse response){
 
-        String path = loginService.handlePreLogin(request,response);
+        String path = authService.handlePreLogin(request,response);
         return path;
 
     }
 
-    @RequestMapping(params = "action=login")
+    @RequestMapping(params = "action=login",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String handleLogin(@Param("action") String action, HttpServletRequest request, HttpServletResponse response){
-        String result = loginService.handleLogin(request,response);
+        String result = authService.handleLogin(request,response);
         return result;
 
     }
 
-    @RequestMapping(params = "action=logout")
+    @RequestMapping(params = "action=logout",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String handleLoginout(@Param("action") String action, HttpServletRequest request, HttpServletResponse response){
-        String result = loginService.handleLogout(request,response);
+        String result = authService.handleLogout(request,response);
         return result;
 
     }
 
-    @RequestMapping(params = "action=authTicket")
+    @RequestMapping(params = "action=authTicket",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String handleAuthTicket(@Param("action") String action, HttpServletRequest request, HttpServletResponse response){
-        String result = loginService.handleAuthCookie(request,response);
+        String result = authService.handleAuthCookie(request,response);
         return result;
 
     }

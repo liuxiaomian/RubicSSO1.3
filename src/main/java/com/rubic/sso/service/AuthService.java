@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by Mian on 2016/5/19.
  */
-public interface LoginService {
+public interface AuthService {
 
 
     String handlePreLogin(HttpServletRequest request, HttpServletResponse response);

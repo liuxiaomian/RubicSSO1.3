@@ -11,20 +11,17 @@ public class Ticket implements Serializable {
 	
 	private int userId;
 	
-	private Timestamp createTime;
-	
 	private Timestamp recoverTime;
 	
 	public Ticket() {
 		super();
 	}
 
-	public Ticket(String email, int userId, Timestamp createTime,
+	public Ticket(String email, int userId,
 			Timestamp recoverTime) {
 		super();
 		this.email = email;
 		this.userId = userId;
-		this.createTime = createTime;
 		this.recoverTime = recoverTime;
 	}
 
@@ -46,14 +43,6 @@ public class Ticket implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
 	}
 
 	public Timestamp getRecoverTime() {

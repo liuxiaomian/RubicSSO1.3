@@ -27,18 +27,27 @@ public class CookieUtils {
 		}
 	}
 
-	public static void generateCookeie(String cookieName, String value,
-									   HttpServletResponse response, int expiry, List<String> list, boolean flag) {
-		for(String path:list){
+	/**
+	 * 生成一组给定的path路径的cookie
+	 * @param cookieName
+	 * @param value
+	 * @param response
+	 * @param expiry 过期时间
+	 * @param paths path列表
+     * @param flag 为true时用户https
+     */
+	public static void generateCookies(String cookieName, String value,
+									   HttpServletResponse response, int expiry, List<String> paths, boolean flag) {
+		for(String path:paths){
 			Cookie cookie = new Cookie(cookieName, value);
-			cookie.setSecure(flag);// 为true时用于https
+			cookie.setSecure(flag);
 			cookie.setMaxAge(expiry);
 			cookie.setPath(path);
 			response.addCookie(cookie);
 		}
 		
 	}
-	
+
 	/**
 	 * 获取cookie
 	 * 

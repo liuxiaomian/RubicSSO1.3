@@ -69,21 +69,7 @@
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
-    <bean id="loginService" class="com.rubic.sso.service.impl.LoginServiceImpl">
-        <property name="cookieName" value="SSOID" />
-        <property name="cookiePaths" >
-            <list>
-                <value>cubemaster</value>
-                <value>CbueApiStore</value>
-                <value>RubicSSO</value>
-            </list>
-        </property>
-        <property name="secretKey" value="111111112222222233333333"/>
-        <property name="secure" value="false"/>
-        <property name="ticketTimeout" value="120"/><!-- ticket 过期时间 单位：秒 -->
-        <property name="tickets" ref="ticketMap"/>
-        <property name="userDao" ref="userDao"/>
-    </bean>
+
 
     <bean id="ticketMap" class="java.util.concurrent.ConcurrentHashMap" scope="singleton">
     </bean>
@@ -117,6 +103,28 @@
                 <ref bean="CronTriggerBean"/>
             </list>
         </property>
+    </bean>
+
+    <!--========下面是bean配置=========-->
+
+    <bean id="loginService" class="com.rubic.sso.service.impl.AuthServiceImpl">
+        <property name="cookieName" value="SSOID" />
+        <property name="cookiePaths" >
+            <list>
+                <value>cubemaster</value>
+                <value>CbueApiStore</value>
+                <value>RubicSSO</value>
+            </list>
+        </property>
+        <property name="secretKey" value="111111112222222233333333"/>
+        <property name="secure" value="false"/>
+        <property name="ticketTimeout" value="3600"/><!-- ticket 过期时间 单位：秒 -->
+        <property name="tickets" ref="ticketMap"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="adminService" class="com.rubic.sso.service.impl.AdminServiceImpl">
+        <property name="tickets" ref="ticketMap"/>
     </bean>
 
 </beans>
