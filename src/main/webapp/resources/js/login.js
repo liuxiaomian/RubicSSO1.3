@@ -69,7 +69,7 @@ function go(){
 		},
 		success:function(data){	
 			if(data.state=="1"){
-				tips.css({"display":"block"}).text(data.errMsg);
+				tips.css({"display":"block"}).text(data.msg);
 				submitBtn.css({"background":"#1aa9d2","cursor":"pointer"}).val("登录");
 			}else{
 				
