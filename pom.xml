@@ -29,6 +29,21 @@
           <contextPath>/</contextPath>
         </configuration>
       </plugin>
+
+      <!-- 以下是部署tomcat配置 -->
+
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <!-- 注意此处的url -->
+          <url>http://172.22.146.6/manager/text</url>
+          <server>tomcat7</server> <!-- 此处的名字必须和setting.xml中配置的ID一致-->
+          <path>/RubicSSO</path> <!-- 此处的名字是项目发布的工程名-->
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 

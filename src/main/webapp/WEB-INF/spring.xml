@@ -118,7 +118,7 @@
         </property>
         <property name="secretKey" value="111111112222222233333333"/>
         <property name="secure" value="false"/>
-        <property name="ticketTimeout" value="3600"/><!-- ticket 过期时间 单位：秒 -->
+        <property name="defaultTicketTimeout" value="3600"/><!-- ticket 过期时间 单位：秒 -->
         <property name="tickets" ref="ticketMap"/>
         <property name="userDao" ref="userDao"/>
     </bean>

@@ -26,12 +26,12 @@ public class RecoverTicketJob {
      */
     public void recover(){
 //        System.out.println("目前共有："+tickets.size()+" ticket，现在对过期ticket进行清理!");
-        logger.info("目前共有："+tickets.size()+" ticket，现在对过期ticket进行清理!");
+        logger.debug("目前共有："+tickets.size()+" ticket，现在对过期ticket进行清理!");
         List<String> ticketKeys = new ArrayList<String>();
         for(Map.Entry<String, Ticket> entry : tickets.entrySet()) {
             long recoverTime = entry.getValue().getRecoverTime().getTime();
             long currentTime = System.currentTimeMillis();
-            logger.info("recoverTime: "+recoverTime+" - currentTime: "+currentTime);
+            logger.debug("recoverTime: "+recoverTime+" - currentTime: "+currentTime);
             if(recoverTime < currentTime)
                 ticketKeys.add(entry.getKey());
         }

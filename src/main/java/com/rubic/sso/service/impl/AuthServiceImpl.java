@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * ticket有效时间
      */
-    private int ticketTimeout;
+    private int defaultTicketTimeout;
 
     /**
      * 需要设置cookie的项目路径
@@ -78,8 +78,8 @@ public class AuthServiceImpl implements AuthService {
         this.secretKey = secretKey;
     }
 
-    public void setTicketTimeout(int ticketTimeout) {
-        this.ticketTimeout = ticketTimeout;
+    public void setDefaultTicketTimeout(int defaultTicketTimeout) {
+        this.defaultTicketTimeout = defaultTicketTimeout;
     }
 
     public void setCookiePaths(List<String> cookiePaths) {
@@ -104,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
                             .append("&gotoURL=")
                             .append(gotoURL);
                     response.sendRedirect(sb.toString());
-                }else {
+                } else {
                     return "404";
                 }
             } else {
@@ -139,31 +139,26 @@ public class AuthServiceImpl implements AuthService {
             user = checkUserInfo(email, password);
         } catch (IllegalInfoException e) {
             JSONObject result = packLoginMsg("邮箱错误", 1);
-
             return result.toJSONString();
         } catch (IllegalPasswordException e) {
             JSONObject result = packLoginMsg("密码错误", 1);
             return result.toJSONString();
         }
-
         String ticketKey = UUID.randomUUID().toString().replace("-", "");
         String encodedticketKey = DESUtils.encrypt(ticketKey, secretKey);
 
-        Ticket ticket = newTicket(email, user.getUser_id());
+        String[] checks = request.getParameterValues("autoLoginInWeek");
+        int expiry;
+        if (checks != null && "1".equals(checks[0])) {
+            expiry = 7 * 24 * 3600;
+        } else {
+            expiry = -1;
+
+        }
+        Ticket ticket = newTicketAndCookie(expiry, encodedticketKey, user, response);
         tickets.put(ticketKey, ticket);
 
-        String[] checks = request.getParameterValues("autoLoginInWeek");
-        if (checks != null && "1".equals(checks[0])) {
-            int expiry = 7 * 24 * 3600;
-            System.out.println("一周之内免登录~~~");
-            CookieUtils.generateCookies(cookieName, encodedticketKey, response,
-                    expiry, cookiePaths, secure);
-        } else {
-            int expiry = -1;
-            CookieUtils.generateCookies(cookieName, encodedticketKey, response,
-                    expiry, cookiePaths, secure);
-        }
-        logger.info("用户登陆：" + user.toString()+"- ip："+request.getRemoteAddr());
+        logger.info("用户登陆：" + user.toString() + "- ip：" + request.getRemoteHost());
         String gotoURL = request.getParameter("gotoURL");
         JSONObject result = new JSONObject();
         result.put("gotoURL", gotoURL);
@@ -181,21 +176,21 @@ public class AuthServiceImpl implements AuthService {
      */
     public String handleLogout(HttpServletRequest request, HttpServletResponse response) {
         String encodedTicket = request.getParameter("cookieName");
-        JSONObject resultJSON = new JSONObject();
-        if (encodedTicket == null || encodedTicket.equals("")) {
+
+        String decodedTicket = null;
+        try {
+            decodedTicket = DESUtils.decrypt(encodedTicket, secretKey);
+        } catch (NullValueException e) {
+            JSONObject resultJSON = new JSONObject();
             resultJSON.put("error", true);
             resultJSON.put("msg", "Ticket can not be empty!");
-        } else {
-            String decodedTicket = null;
-            try {
-                decodedTicket = DESUtils.decrypt(encodedTicket, secretKey);
-            } catch (NullValueException e) {
-                e.printStackTrace();
-            }
-            tickets.remove(decodedTicket);
-            CookieUtils.deleteCookie(request, response, cookieName);
-            resultJSON.put("error", false);
+            return resultJSON.toJSONString();
         }
+        JSONObject resultJSON = new JSONObject();
+        tickets.remove(decodedTicket);
+        CookieUtils.deleteCookie(request, response, cookieName);
+        resultJSON.put("error", false);
+        resultJSON.put("msg", "登出成功");
         return resultJSON.toJSONString();
     }
 
@@ -221,7 +216,6 @@ public class AuthServiceImpl implements AuthService {
 
         if (tickets.containsKey(decodedTicket)) {
             JSONObject resultJSON = packAuthCookieMsg(false, "auth success");
-            tickets.get(decodedTicket).setRecoverTime(TimeUtils.newTimeStampFromNow(ticketTimeout));
             resultJSON.put("email", tickets.get(decodedTicket).getEmail());
             resultJSON.put("userId", tickets.get(decodedTicket).getUserId());
             return resultJSON.toJSONString();
@@ -276,25 +270,37 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * 生成Ticket TODO 用户选择一周免登录如何处理
+     * 生成ticket  TODO 用户选择一周免登录如何处理
      *
-     * @param email  用户email
-     * @param userId 用户id
-     * @return
-     */
-    private Ticket newTicket(String email, int userId) {
-        return newTicket(email,userId,ticketTimeout);
-    }
-
-    /**
-     * 生成ticket
-     * @param email 用户email
-     * @param userId 用户id
+     * @param email    用户email
+     * @param userId   用户id
      * @param deadTime 指定过期时间
      * @return ticket
      */
-    private Ticket newTicket(String email,int userId,int deadTime){
+    private Ticket newTicket(String email, int userId, int deadTime) {
         return new Ticket(email, userId, TimeUtils.newTimeStampFromNow(deadTime));
+    }
+
+    /**
+     * 生成ticket并把生成的cookie添加到response中
+     *
+     * @param expiry           cookie过期时间
+     * @param encodedticketKey 加密的ticketKey
+     * @param user             登陆的用户
+     * @param response
+     * @return ticket
+     */
+    private Ticket newTicketAndCookie(int expiry, String encodedticketKey, User user, HttpServletResponse response) {
+        int timeout;
+        if (expiry == -1) {
+            timeout = defaultTicketTimeout;
+        } else {
+            timeout = expiry;
+        }
+        logger.info("一周之内免登录~~~");
+        CookieUtils.generateCookies(cookieName, encodedticketKey, response,
+                expiry, cookiePaths, secure);
+        return newTicket(user.getEmail(), user.getUser_id(), timeout);
     }
 
 }
