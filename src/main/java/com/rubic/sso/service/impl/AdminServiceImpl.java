@@ -3,9 +3,12 @@ package com.rubic.sso.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.rubic.sso.po.Ticket;
 import com.rubic.sso.service.AdminService;
+import com.rubic.sso.util.TimeUtils;
 import org.apache.log4j.Logger;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 管理实现类
@@ -71,4 +74,17 @@ public class AdminServiceImpl implements AdminService {
 
         return null;
     }
+
+
+//    private JSONObject transTime(Map<String,Ticket> tickets){
+//
+//        Set<Map.Entry<String,Ticket>> entries = tickets.entrySet();
+//        Iterator<Map.Entry<String, Ticket>> iterator = entries.iterator();
+//        JSONObject result = new JSONObject();
+//        while (iterator.hasNext()){
+//            Map.Entry<String,Ticket> entry = iterator.next();
+//            TimeUtils.transMillisToTime(entry.getValue().getRecoverTime().getTime());
+//        }
+//
+//    }
 }

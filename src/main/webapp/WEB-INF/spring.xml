@@ -18,7 +18,7 @@
     <!-- enable autowire -->
     <context:annotation-config />
 
-    <context:component-scan base-package="com.rubic.sso.service.impl"/>
+    <!--<context:component-scan base-package="com.rubic.sso.service.impl"/>-->
 
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
           init-method="init" destroy-method="close">
@@ -111,9 +111,9 @@
         <property name="cookieName" value="SSOID" />
         <property name="cookiePaths" >
             <list>
-                <value>cubemaster</value>
-                <value>CbueApiStore</value>
-                <value>RubicSSO</value>
+                <value>/cubemaster/</value>
+                <value>/CbueApiStore/</value>
+                <value>/RubicSSO/</value>
             </list>
         </property>
         <property name="secretKey" value="111111112222222233333333"/>
