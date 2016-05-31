@@ -13,7 +13,7 @@ public interface AdminService {
 
     JSONObject viewLogFileDetails(String fileName);
 
-    JSONObject viewLogFileList(String index);
+    JSONObject viewLogFileList(int index);
 
 
 }

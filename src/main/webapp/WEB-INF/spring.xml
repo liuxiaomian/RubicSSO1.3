@@ -112,7 +112,7 @@
         <property name="cookiePaths" >
             <list>
                 <value>/cubemaster/</value>
-                <value>/CbueApiStore/</value>
+                <value>/CubeApiStore/</value>
                 <value>/RubicSSO/</value>
             </list>
         </property>

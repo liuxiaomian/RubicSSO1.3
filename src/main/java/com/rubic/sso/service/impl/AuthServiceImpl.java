@@ -155,7 +155,7 @@ public class AuthServiceImpl implements AuthService {
             expiry = -1;
 
         }
-        Ticket ticket = newTicketAndCookie(expiry, encodedticketKey, user, response);
+        Ticket ticket = newTicketAndCookie(expiry, encodedticketKey, user, request,response);
         tickets.put(ticketKey, ticket);
 
         logger.info("用户登陆：" + user.toString() + "- ip：" + request.getRemoteHost());
@@ -290,14 +290,29 @@ public class AuthServiceImpl implements AuthService {
      * @param response
      * @return ticket
      */
-    private Ticket newTicketAndCookie(int expiry, String encodedticketKey, User user, HttpServletResponse response) {
+    private Ticket newTicketAndCookie(int expiry, String encodedticketKey, User user,HttpServletRequest request, HttpServletResponse response) {
         int timeout;
         if (expiry == -1) {
             timeout = defaultTicketTimeout;
         } else {
             timeout = expiry;
+            logger.info("一周之内免登录~~~");
         }
-        logger.info("一周之内免登录~~~");
+        Map<String,String> pathAndDomain = new HashMap<String, String>();
+
+        logger.info("remoteAddr:"+request.getRemoteAddr());
+        logger.info("remoteUrl:"+request.getRequestURL());
+        logger.info("remoteHost:"+request.getRemoteHost());
+        logger.info("localAddr:"+request.getLocalAddr());
+        logger.info("serverName:"+request.getServerName());
+
+        for (String path:cookiePaths){
+            if(path.equals(request.getContextPath())){
+                pathAndDomain.put(path,request.getLocalAddr());
+            }else {
+                pathAndDomain.put(path,request.getRemoteAddr());
+            }
+        }
         CookieUtils.generateCookies(cookieName, encodedticketKey, response,
                 expiry, cookiePaths, secure);
         return newTicket(user.getEmail(), user.getUser_id(), timeout);

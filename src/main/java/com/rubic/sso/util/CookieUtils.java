@@ -40,6 +40,7 @@ public class CookieUtils {
 									   HttpServletResponse response, int expiry, List<String> paths, boolean flag) {
 		for(String path:paths){
 			Cookie cookie = new Cookie(cookieName, value);
+//			cookie.setDomain();
 			cookie.setSecure(flag);
 			cookie.setMaxAge(expiry);
 			cookie.setPath(path);

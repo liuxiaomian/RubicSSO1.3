@@ -13,8 +13,8 @@
     <!-- 配置html视图 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-        <property name="prefix" value="/WEB-INF/jsp/" />
-        <property name="suffix" value=".jsp" />
+        <property name="prefix" value="/WEB-INF/html/" />
+        <property name="suffix" value=".html" />
     </bean>
 
     <!-- 处理静态资源文件 -->

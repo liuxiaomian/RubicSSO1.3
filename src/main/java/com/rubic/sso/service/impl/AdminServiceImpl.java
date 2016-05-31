@@ -3,9 +3,13 @@ package com.rubic.sso.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.rubic.sso.po.Ticket;
 import com.rubic.sso.service.AdminService;
+import com.rubic.sso.util.SSOFileVisitor;
 import com.rubic.sso.util.TimeUtils;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -56,10 +60,25 @@ public class AdminServiceImpl implements AdminService {
      * @param index 请求查看的页数
      * @return
      */
-    public JSONObject viewLogFileList(String index) {
+    public JSONObject viewLogFileList(int index) {
 
+        logger.info(webRootPath);
 
+        Path filePath = Paths.get(webRootPath);
+        Path parent1 = filePath.getParent();
+        Path parent2 = parent1.getParent();
+        logger.info("1:"+parent1+"2:"+parent2);
 
+        Path logPath = Paths.get(parent2.toString(),"project_logs","RubicSSO");
+        try {
+            Path path = Files.walkFileTree(logPath,new SSOFileVisitor());
+        JSONObject result = new JSONObject();
+        result.put("paths",path);
+
+        return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

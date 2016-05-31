@@ -30,8 +30,9 @@ public class AdminController {
     }
 
     @RequestMapping(value = "log/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
     public String viewLogFileList(@RequestParam("pageIndex") int index){
-        return null;
+        return adminService.viewLogFileList(index).toJSONString();
     }
 
     @RequestMapping(value = "log/{logFileName}",produces = "application/json;charset=UTF-8",method = RequestMethod.GET)
