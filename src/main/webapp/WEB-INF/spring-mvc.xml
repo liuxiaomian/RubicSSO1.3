@@ -11,10 +11,20 @@
     <mvc:annotation-driven/>
 
     <!-- 配置html视图 -->
+    <!--<bean id="htmlviewResolver"-->
+          <!--class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">-->
+        <!--<property name="prefix" value="/WEB-INF/html"/>-->
+        <!--<property name="suffix" value=".html" />-->
+        <!--<property name="contentType" value="text/html;charset=UTF-8"></property>-->
+    <!--</bean>-->
+
+
+
+    <!-- jsp视图-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-        <property name="prefix" value="/WEB-INF/html/" />
-        <property name="suffix" value=".html" />
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
     </bean>
 
     <!-- 处理静态资源文件 -->

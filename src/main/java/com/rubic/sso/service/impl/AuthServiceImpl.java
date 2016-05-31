@@ -115,13 +115,14 @@ public class AuthServiceImpl implements AuthService {
         } catch (CookieNotFoundException e) {
             logger.info("Cookie in SSOAuth is not founded !");
             return "login";
-
         } catch (NullValueException e) {
             e.printStackTrace();
+            return "500";
         } catch (IOException e) {
             e.printStackTrace();
+            return "500";
         }
-        return "login";
+        return "404";
     }
 
     /**
